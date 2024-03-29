@@ -11,16 +11,15 @@ const app = express();
 //configurar cors
 app.use(cors());
 
+//Lectura y parseo del body de la petición
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 //Iniciando DB mongo
 dbConnection();
 
 //Rutas
-app.get('/', (req, res) => {
-	res.json({
-		ok: true,
-		mensaje: 'Hola mundo',
-	});
-});
+app.use('/api/usuarios', require('./routes/usuarios-route'));
 
 app.listen(process.env.PORT, () => {
 	console.log('Servidor corriendo en puerto ' + process.env.PORT);
