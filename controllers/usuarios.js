@@ -1,5 +1,5 @@
 const { response } = require('express');
-const Usuario = require('../models/usuario-model');
+const Usuario = require('../models/usuario');
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
 
@@ -13,7 +13,7 @@ const getUsuarios = async (req, res) => {
 };
 
 const crearUsuario = async (req, res = response) => {
-	const { email, name, password } = req.body;
+	const { email, password } = req.body;
 
 	try {
 		const existeEmail = await Usuario.findOne({ email });
@@ -78,7 +78,9 @@ const actualizarUsuario = async (req, res = response) => {
 			}
 		}
 		campos.email = email;
-		const usuarioActualizado = await Usuario.findByIdAndUpdate(id, campos, { new: true });
+		const usuarioActualizado = await Usuario.findByIdAndUpdate(id, campos, {
+			new: true,
+		});
 
 		res.json({
 			ok: true,
