@@ -9,8 +9,8 @@ const { validarJWT } = require('../middlewares/validar-jwt');
 const {
 	getMedicos,
 	crearMedico,
-	//actualizarMedico,
-	//eliminarMedico,
+	actualizarMedico,
+	eliminarMedico,
 } = require('../controllers/medicos');
 
 const router = Router();
@@ -33,15 +33,11 @@ router.post(
 //actualizar un medico
 router.put(
 	'/:id',
-	[validarCampos, check('direccion', 'La dirección es obligatoria')]
-	//actualizarMedico
+	[validarCampos, check('direccion', 'La dirección es obligatoria')],
+	actualizarMedico
 );
 
 //eliminar un medico
-router.delete(
-	'/:id',
-	[]
-	//eliminarMedico
-);
+router.delete('/:id', [], eliminarMedico);
 
 module.exports = router;

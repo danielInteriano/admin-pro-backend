@@ -3,6 +3,7 @@ const Medico = require('../models/medico');
 const Usuario = require('../models/usuario');
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
+const medico = require('../models/medico');
 
 //obtener medicos
 const getMedicos = async (req, res) => {
@@ -65,7 +66,81 @@ const crearMedico = async (req, res = response) => {
 	}
 };
 
+//actualizar un medico
+const actualizarMedico = async (req, res = response) => {
+	const id = req.params.id;
+	try {
+		//verificar si el medico existe
+		const existeMedico = await medico.findById(id);
+
+		if (!existeMedico) {
+			res.json({
+				ok: false,
+				msg: 'El medico no existe',
+			});
+		}
+
+		const { password, email, google, ...campos } = req.body;
+		//verificar si el email está registrado
+		if (existeMedico.email !== email) {
+			const emailExiste = await Medico.findOne({ email });
+			if (emailExiste) {
+				return res.status(400).json({
+					ok: false,
+					msg: 'Ya existe un medico con ese email',
+				});
+			}
+		}
+
+		campos.email = email;
+		const medicoActualizado = await Medico.findByIdAndUpdate(id, campos, {
+			new: true,
+		});
+
+		res.json({
+			ok: true,
+			medico: medicoActualizado,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(404).json({
+			ok: false,
+			msg: 'Problemas con el servidor',
+		});
+	}
+};
+
+//eliminar un medico
+const eliminarMedico = async (req, res = response) => {
+	const id = req.params.id;
+	try {
+		//verificar si el medico existe
+		const encontrado = await Medico.findById(id);
+		if (!encontrado) {
+			res.status(404).json({
+				ok: false,
+				msg: 'No se encontró usuario con ese id.',
+			});
+		}
+
+		//eliminando medico si existe
+		await Medico.findByIdAndDelete(id);
+		res.status(200).json({
+			ok: true,
+			msg: 'Medico eliminado exitosamente',
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({
+			ok: false,
+			msg: 'Problemas al eliminar medico',
+		});
+	}
+};
+
 module.exports = {
-    getMedicos,
+	getMedicos,
 	crearMedico,
+	actualizarMedico,
+	eliminarMedico,
 };
