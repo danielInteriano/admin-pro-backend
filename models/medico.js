@@ -21,6 +21,16 @@ const MedicoSchema = Schema({
 		type: Boolean,
 		defaul: false,
 	},
+	usuario: {
+		type: Schema.Types.ObjectId,
+		ref: 'Usuario',
+		required: true,
+	},
+	hospital: {
+		type: Schema.Types.ObjectId,
+		ref: 'Hospital',
+		required: true,
+	},
 });
 
 MedicoSchema.method('toJSON', function () {

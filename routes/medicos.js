@@ -18,13 +18,16 @@ const router = Router();
 //obtener los medicos
 router.get('/', validarJWT, getMedicos);
 
-//guardar un medico
+//crear un medico
 router.post(
 	'/',
 	[
+		validarJWT,
 		check('name', 'El campo es obligatorio').not().isEmpty(),
 		check('email', 'El email no es válido').isEmail(),
 		check('password', 'La contraseña es obligatoria').not().isEmpty(),
+		check('hospital', 'El id del hospital es obligatorio').not().isEmpty(),
+		check('hospital', 'El id del hospital debe ser válido').isMongoId(),
 		validarCampos,
 	],
 	crearMedico

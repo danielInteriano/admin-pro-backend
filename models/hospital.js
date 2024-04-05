@@ -12,7 +12,8 @@ const HospitalSchema = Schema(
 		direccion: {
 			type: String,
 		},
-		idUsuario: {
+		usuario: {
+			required: true,
 			type: Schema.Types.ObjectId,
 			ref: 'Usuario',
 		},

@@ -7,7 +7,9 @@ const medico = require('../models/medico');
 
 //obtener medicos
 const getMedicos = async (req, res) => {
-	const medicos = await Medico.find({}, 'email name img google');
+	const medicos = await Medico.find()
+		.populate('usuario', 'name email img')
+		.populate('hospital', 'name direccion img');
 
 	res.json({
 		ok: true,
@@ -17,7 +19,10 @@ const getMedicos = async (req, res) => {
 
 //crear medico
 const crearMedico = async (req, res = response) => {
+	//creando un medico
+	const id = req.id;
 	const { email, password } = req.body;
+	const medico = new Medico({ usuario: id, ...req.body });
 
 	try {
 		//verificar email en Medicos
@@ -38,15 +43,12 @@ const crearMedico = async (req, res = response) => {
 			});
 		}
 
-		//creando el médico
-		const medico = new Medico(req.body);
-
 		//encriptar password
 		const salt = bcrypt.genSaltSync();
 		medico.password = bcrypt.hashSync(password, salt);
 
 		//guardando medico
-		await medico.save();
+		const medicoDB = await medico.save();
 
 		//creando token de usuario
 		const token = await generarJWT(medico.id);
@@ -54,12 +56,12 @@ const crearMedico = async (req, res = response) => {
 
 		res.status(200).json({
 			ok: true,
-			medico,
+			medico: medicoDB,
 			token,
 		});
 	} catch (error) {
 		console.log(error);
-		res.status(404).json({
+		res.status(500).json({
 			ok: false,
 			msg: 'Error en el servidor',
 		});

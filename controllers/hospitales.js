@@ -2,7 +2,10 @@ const { response } = require('express');
 const Hospital = require('../models/hospital');
 
 const getHospitales = async (req, res = response) => {
-	const hospitales = await Hospital.find({}, 'name direccion img usuario');
+	const hospitales = await Hospital.find().populate(
+		'usuario',
+		'name email img'
+	);
 
 	res.json({
 		ok: true,
@@ -11,29 +14,21 @@ const getHospitales = async (req, res = response) => {
 };
 
 const crearHospital = async (req, res = response) => {
-	const { name } = req.body;
+	//creando el hospital
+	const id = req.id;
+	const hospital = new Hospital({ usuario: id, ...req.body });
 
 	try {
-		if (name === '') {
-			res.status(400).json({
-				ok: false,
-				msg: 'El nombre del hospital es obligatorio',
-			});
-		}
-
-		//creando el hospital
-		const hospital = new Hospital(req.body);
-
 		//guardando hospital
-		await hospital.save();
+		const hospitalDB = await hospital.save();
 
 		res.status(200).json({
 			ok: true,
-			hospital,
+			hospital: hospitalDB,
 		});
 	} catch (error) {
 		console.log(error);
-		res.status(404).json({
+		res.status(500).json({
 			ok: false,
 			msg: 'Error en el servidor',
 		});

@@ -18,7 +18,7 @@ const router = Router();
 //obtener los hospitales
 router.get('/', validarJWT, getHospitales);
 
-//guardar un hospital
+//crear un hospital
 router.post(
 	'/',
 	[validarCampos, check('name', 'El campo es obligatorio').not().isEmpty()],
