@@ -21,14 +21,21 @@ router.get('/', validarJWT, getHospitales);
 //crear un hospital
 router.post(
 	'/',
-	[validarCampos, check('name', 'El campo es obligatorio').not().isEmpty()],
+	[
+		validarJWT,
+		check('name', 'El nombre del hospital es obligatorio').not().isEmpty(),
+		validarCampos,
+	],
 	crearHospital
 );
 
 //actualizar un hospital
 router.put(
 	'/:id',
-	[validarCampos, check('direccion', 'La dirección es obligatoria')],
+	[
+		validarCampos,
+		check('direccion', 'La dirección del hospital es obligatoria'),
+	],
 	actualizarHospital
 );
 

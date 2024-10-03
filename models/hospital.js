@@ -6,10 +6,10 @@ const HospitalSchema = Schema(
 			type: String,
 			required: true,
 		},
-		img: {
+		direccion: {
 			type: String,
 		},
-		direccion: {
+		img: {
 			type: String,
 		},
 		usuario: {
