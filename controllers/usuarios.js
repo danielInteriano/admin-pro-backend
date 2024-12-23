@@ -73,7 +73,7 @@ const actualizarUsuario = async (req, res = response) => {
 
 		//Si el usuario existe
 		//Realizar actualizacion de los campos necesarios
-		const { password, email, google, ...campos } = req.body;
+		const { name, email, google, ...campos } = req.body;
 
 		if (usuarioDB.email !== email) {
 			const emailExiste = await Usuario.findOne({ email });
@@ -84,6 +84,11 @@ const actualizarUsuario = async (req, res = response) => {
 				});
 			}
 		}
+
+		if (name) {
+			campos.name = name;
+		}
+
 		campos.email = email;
 		const usuarioActualizado = await Usuario.findByIdAndUpdate(id, campos, {
 			new: true,

@@ -16,6 +16,7 @@ const UsuarioSchema = Schema({
 	},
 	img: {
 		type: String,
+		defaul: './uploads/usuarios/eb249f2b-49a8-4713-84f7-36d404b24d0b.png',
 	},
 	role: {
 		type: String,

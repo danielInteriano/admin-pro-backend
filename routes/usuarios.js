@@ -36,7 +36,6 @@ router.put(
 	[
 		validarJWT,
 		check('name', 'El nombre es obligatorio').not().isEmpty(),
-		check('password', 'La password es obligatoria').not().isEmpty(),
 		check('role', 'El role es obligatorio').not().isEmpty(),
 		validarCampos,
 	],
