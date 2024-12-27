@@ -13,6 +13,6 @@ router.use(fileUpload());
 
 //guardar un archivo
 router.put('/:coleccion/:id', validarJWT, guardarArchivo);
-router.get('/:coleccion/:foto', validarJWT, retornaImagen);
+router.get('/:coleccion/:foto', retornaImagen);
 
 module.exports = router;

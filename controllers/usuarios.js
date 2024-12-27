@@ -3,6 +3,29 @@ const Usuario = require('../models/usuario');
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
 
+const getUsuario = async (req, res) => {
+	const email = req.params.email;
+	try {
+		const usuario = await Usuario.findOne({ email });
+		if (!usuario) {
+			res.status(404).json({
+				ok: false,
+				msg: 'No se encontró usuario con ese email',
+			});
+		}
+		res.json({
+			ok: true,
+			usuario: usuario,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			ok: false,
+			msg: 'No se puede obtener el usuario.',
+		});
+	}
+};
+
 const getUsuarios = async (req, res) => {
 	const desde = Number(req.query.desde) || 0;
 
@@ -136,6 +159,7 @@ const eliminarUsuario = async (req, res = response) => {
 };
 
 module.exports = {
+	getUsuario,
 	getUsuarios,
 	crearUsuario,
 	actualizarUsuario,

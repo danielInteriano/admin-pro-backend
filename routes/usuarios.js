@@ -7,6 +7,7 @@ const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 const {
+	getUsuario,
 	getUsuarios,
 	crearUsuario,
 	actualizarUsuario,
@@ -14,6 +15,9 @@ const {
 } = require('../controllers/usuarios');
 
 const router = Router();
+
+//obtener un usuario por su email
+router.get('/:email', validarJWT, getUsuario);
 
 //obtener usuarios
 router.get('/', validarJWT, getUsuarios);
