@@ -8,6 +8,7 @@ const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 const {
 	getUsuario,
+	getUsuarioById,
 	getUsuarios,
 	crearUsuario,
 	actualizarUsuario,
@@ -18,6 +19,9 @@ const router = Router();
 
 //obtener un usuario por su email
 router.get('/:email', validarJWT, getUsuario);
+
+//obtener un usuario por su id
+router.get('/usuario/:id', validarJWT, getUsuarioById);
 
 //obtener usuarios
 router.get('/', validarJWT, getUsuarios);

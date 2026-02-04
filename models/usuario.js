@@ -25,7 +25,7 @@ const UsuarioSchema = Schema({
 	},
 	google: {
 		type: Boolean,
-		defaul: false,
+		default: false,
 	},
 });
 

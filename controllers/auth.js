@@ -11,7 +11,7 @@ const login = async (req, res = response) => {
 		//varificando email
 		const usuario = await Usuario.findOne({ email });
 		if (!usuario) {
-			res.status(404).json({
+			return res.status(404).json({
 				ok: false,
 				msg: 'Email no es válido',
 			});
@@ -19,7 +19,7 @@ const login = async (req, res = response) => {
 		//verificando password
 		const validarPassword = bcrypt.compareSync(password, usuario.password);
 		if (!validarPassword) {
-			res.status(400).json({
+			return res.status(400).json({
 				ok: false,
 				msg: 'El password no es válido',
 			});
@@ -28,13 +28,13 @@ const login = async (req, res = response) => {
 		//generar un JWT para luego logearse
 		const token = await generarJWT(usuario.id);
 
-		res.status(200).json({
+		return res.status(200).json({
 			ok: true,
 			token,
 		});
 	} catch (error) {
 		console.log(error);
-		res.status(500).json({
+		return res.status(500).json({
 			ok: false,
 			msg: 'Error en el servidor',
 		});
@@ -52,7 +52,7 @@ const googleSingIn = async (req, res = response) => {
 			usuario = new Usuario({
 				name: name,
 				email: email,
-				password: '123456',
+				password: 'interiano',
 				img: picture,
 				google: true,
 			});

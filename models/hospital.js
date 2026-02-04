@@ -11,6 +11,7 @@ const HospitalSchema = Schema(
 		},
 		img: {
 			type: String,
+			defaul: './uploads/hospitales/no-hospital.png',
 		},
 		usuario: {
 			required: true,

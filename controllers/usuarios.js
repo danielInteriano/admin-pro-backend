@@ -26,6 +26,31 @@ const getUsuario = async (req, res) => {
 	}
 };
 
+//obtener un usuario por su id
+const getUsuarioById = async (req, res) => {
+	const id = req.params.id;	
+	try {
+		const usuario = await Usuario.findById(id);
+		if (!usuario) {
+			res.status(404).json({
+				ok: false,
+				msg: 'No se encontró usuario con ese id',
+			});
+		}
+		res.json({
+			ok: true,
+			usuario: usuario,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({	
+			ok: false,
+			msg: 'No se puede obtener el usuario.',
+		});
+	}
+};
+
+
 const getUsuarios = async (req, res) => {
 	const desde = Number(req.query.desde) || 0;
 
@@ -96,7 +121,7 @@ const actualizarUsuario = async (req, res = response) => {
 
 		//Si el usuario existe
 		//Realizar actualizacion de los campos necesarios
-		const { name, email, google, ...campos } = req.body;
+		const { name, email, password, google, ...campos } = req.body;
 
 		if (usuarioDB.email !== email) {
 			const emailExiste = await Usuario.findOne({ email });
@@ -112,7 +137,21 @@ const actualizarUsuario = async (req, res = response) => {
 			campos.name = name;
 		}
 
-		campos.email = email;
+		if(password){
+			//encriptar password
+			const salt = bcrypt.genSaltSync();
+			campos.password = bcrypt.hashSync(password, salt);
+		}
+
+		if (campos.google) {
+			campos.email = email;
+		} else if (usuarioDB.email !== email) {
+			return res.status(400).json({
+				ok: false,
+				msg: 'El email de google no puede cambiarse',
+			});
+		}
+
 		const usuarioActualizado = await Usuario.findByIdAndUpdate(id, campos, {
 			new: true,
 		});
@@ -160,6 +199,7 @@ const eliminarUsuario = async (req, res = response) => {
 
 module.exports = {
 	getUsuario,
+	getUsuarioById,
 	getUsuarios,
 	crearUsuario,
 	actualizarUsuario,
